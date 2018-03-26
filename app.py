@@ -56,7 +56,7 @@ def airquality(city):
     lat, lng = geocode(city)
     aqi, area, state = airvisual_lag_lng(lat, lng)
     status = aqi_status(aqi)
-    text = render_template('airquality', location=city, aqi=aqi, status=status)
+    text = render_template('airquality', location=area, aqi=aqi, status=status)
     return statement(text).simple_card('AirQuality', text)
 
 if __name__ == '__main__':
