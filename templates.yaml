@@ -1,0 +1,1 @@
+airquality: Current Air Quality in {{ location }} is {{ status }}. AQI is {{ aqi }}.
