@@ -11,7 +11,6 @@ AIRVISUAL_LAT_LNG = "http://api.airvisual.com/v2/nearest_city?key={}&lat={}&lon=
 
 
 def airvisual_lag_lng(lat, lng):
-    # key = bot.config.apikeys.airvisual_key
     key = os.environ.get('AIRVISUAL_KEY')
     search = requests.get(AIRVISUAL_LAT_LNG.format(key, lat, lng)).json()
     if search["status"] == "success":
@@ -38,7 +37,6 @@ def aqi_status(aqi):
     return 'Unknown'
 
 def geocode(location):
-    # key = bot.config.apikeys.mapquest_key
     key = os.environ.get('MAPQUEST_KEY')
     search = requests.get(GEOCODE_URL.format(key, location)).json()
     status = search["info"]["statuscode"]
@@ -58,6 +56,14 @@ def airquality(city):
     status = aqi_status(aqi)
     text = render_template('airquality', location="{}, {}".format(area, state), aqi=aqi, status=status)
     return statement(text).simple_card('AirQuality', text)
+
+@ask.launch
+def launch():
+    return statement("Welcome to Air Q. Please ask me about the air quality at a city near you or allow access to your postal code.").consent_card("read::alexa:device:all:address:country_and_postal_code")
+
+@ask.app.route('/health')
+def health():
+    return('OK')
 
 if __name__ == '__main__':
     app.run(debug=True)
