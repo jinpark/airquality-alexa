@@ -1,6 +1,6 @@
 import os
 from flask import Flask, render_template
-from flask_ask import Ask, statement
+from flask_ask import Ask, statement, question
 import requests
 
 app = Flask(__name__)
@@ -42,7 +42,7 @@ def geocode(location):
     status = search["info"]["statuscode"]
     if status == 0 and len(search["results"]) > 0 and len(search["results"][0]["locations"]) > 0:
         found_location = search["results"][0]["locations"][0]
-        lat = search["results"][0]["locations"][0]["latLng"]["lat"] 
+        lat = search["results"][0]["locations"][0]["latLng"]["lat"]
         lng = search["results"][0]["locations"][0]["latLng"]["lng"]
         return lat, lng
     return None, None
@@ -59,7 +59,7 @@ def airquality(city):
 
 @ask.launch
 def launch():
-    return statement("Welcome to Air Q. Please ask me about the air quality at a city near you or allow access to your postal code.").consent_card("read::alexa:device:all:address:country_and_postal_code")
+    return question("Welcome to Air Q. Please ask me about the air quality at a city near you or allow access to your postal code.").consent_card("read::alexa:device:all:address:country_and_postal_code")
 
 @ask.app.route('/health')
 def health():
