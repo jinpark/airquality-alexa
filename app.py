@@ -60,7 +60,7 @@ def airquality(city):
 @ask.launch
 def launch():
     launch_text = render_template('launch')
-    return question(launch)text.consent_card("read::alexa:device:all:address:country_and_postal_code")
+    return question(launch_text).consent_card("read::alexa:device:all:address:country_and_postal_code")
 
 @ask.intent('AMAZON.HelpIntent')
 def help():
