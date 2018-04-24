@@ -59,7 +59,26 @@ def airquality(city):
 
 @ask.launch
 def launch():
-    return question("Welcome to Air Q. Please ask me about the air quality at a city near you or allow access to your postal code.").consent_card("read::alexa:device:all:address:country_and_postal_code")
+    launch_text = render_template('launch')
+    return question(launch)text.consent_card("read::alexa:device:all:address:country_and_postal_code")
+
+@ask.intent('AMAZON.HelpIntent')
+def help():
+    help_text = render_template('help')
+    return question(help_text).reprompt(help_text)
+
+
+@ask.intent('AMAZON.StopIntent')
+def stop():
+    bye_text = render_template('bye')
+    return statement(bye_text)
+
+
+@ask.intent('AMAZON.CancelIntent')
+def cancel():
+    bye_text = render_template('bye')
+    return statement(bye_text)
+
 
 @ask.app.route('/health')
 def health():

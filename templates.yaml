@@ -1,1 +1,7 @@
 airquality: Current Air Quality in {{ location }} is {{ status }}. AQI is {{ aqi }}.
+
+launch: Welcome to Air Q. Please ask me about the air quality at a city near you or allow access to your postal code.
+
+help: Ask the air quality app about air quality in your area!
+
+bye: Thanks for using Air Quality!
