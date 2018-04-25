@@ -20,7 +20,6 @@ def airvisual_lag_lng(lat, lng):
     redis_key = "{}_{}".format(lat, lng)
     results = r.get(redis_key)
     if results:
-        print('results for lat, lng', redis_key, results)
         results_list = json.loads(results)
         return results_list[0], results_list[1], results_list[2]
     search = requests.get(AIRVISUAL_LAT_LNG.format(AIRVISUAL_KEY, lat, lng)).json()
@@ -51,7 +50,6 @@ def aqi_status(aqi):
 def geocode(location):
     latlng = r.get(location)
     if latlng:
-        print("redis gotten for ", location, latlng)
         return json.loads(latlng)[0], json.loads(latlng)[1]
     search = requests.get(GEOCODE_URL.format(MAPQUEST_KEY, location)).json()
     status = search["info"]["statuscode"]
