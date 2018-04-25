@@ -28,7 +28,7 @@ def airvisual_lag_lng(lat, lng):
         aqi = search["data"]["current"]["pollution"]["aqius"]
         city = search["data"]["city"]
         state = search["data"]["state"]
-        r.set(redis_key, [aqi, city, state], 1800)
+        r.set(redis_key, json.dumps([aqi, city, state]), 1800)
         return aqi, city, state
     return None, None, None
 
