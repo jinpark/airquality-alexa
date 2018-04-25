@@ -3,6 +3,7 @@ from flask import Flask, render_template
 from flask_ask import Ask, statement, question
 import requests
 import redis
+import json
 
 r = redis.from_url(os.environ.get("REDIS_URL"))
 
