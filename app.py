@@ -17,11 +17,18 @@ AIRVISUAL_KEY = os.environ.get('AIRVISUAL_KEY')
 
 
 def airvisual_lag_lng(lat, lng):
+    redis_key = "{}_{}".format(lat, lng)
+    results = r.get(redis_key)
+    if results:
+        print('results for lat, lng', redis_key, results)
+        results_list = json.loads(results)
+        return results_list[0], results_list[1], results_list[2]
     search = requests.get(AIRVISUAL_LAT_LNG.format(AIRVISUAL_KEY, lat, lng)).json()
     if search["status"] == "success":
         aqi = search["data"]["current"]["pollution"]["aqius"]
         city = search["data"]["city"]
         state = search["data"]["state"]
+        r.set(redis_key, [aqi, city, state], 1800)
         return aqi, city, state
     return None, None, None
 
