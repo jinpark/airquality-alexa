@@ -2,17 +2,21 @@ import os
 from flask import Flask, render_template
 from flask_ask import Ask, statement, question
 import requests
+import redis
+
+r = redis.from_url(os.environ.get("REDIS_URL"))
 
 app = Flask(__name__)
 ask = Ask(app, '/')
 
 GEOCODE_URL = "http://www.mapquestapi.com/geocoding/v1/address?key={}&location={}"
 AIRVISUAL_LAT_LNG = "http://api.airvisual.com/v2/nearest_city?key={}&lat={}&lon={}"
+MAPQUEST_KEY = os.environ.get('MAPQUEST_KEY')
+AIRVISUAL_KEY = os.environ.get('AIRVISUAL_KEY')
 
 
 def airvisual_lag_lng(lat, lng):
-    key = os.environ.get('AIRVISUAL_KEY')
-    search = requests.get(AIRVISUAL_LAT_LNG.format(key, lat, lng)).json()
+    search = requests.get(AIRVISUAL_LAT_LNG.format(AIRVISUAL_KEY, lat, lng)).json()
     if search["status"] == "success":
         aqi = search["data"]["current"]["pollution"]["aqius"]
         city = search["data"]["city"]
@@ -37,13 +41,17 @@ def aqi_status(aqi):
     return 'Unknown'
 
 def geocode(location):
-    key = os.environ.get('MAPQUEST_KEY')
-    search = requests.get(GEOCODE_URL.format(key, location)).json()
+    latlng = r.get(location)
+    if latlng:
+        print("redis gotten for ", location, latlng)
+        return json.loads(latlng)[0], json.loads(latlng)[1]
+    search = requests.get(GEOCODE_URL.format(MAPQUEST_KEY, location)).json()
     status = search["info"]["statuscode"]
     if status == 0 and len(search["results"]) > 0 and len(search["results"][0]["locations"]) > 0:
         found_location = search["results"][0]["locations"][0]
         lat = search["results"][0]["locations"][0]["latLng"]["lat"]
         lng = search["results"][0]["locations"][0]["latLng"]["lng"]
+        r.set(location, [lat, lng])
         return lat, lng
     return None, None
 

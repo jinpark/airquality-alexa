@@ -13,6 +13,7 @@ ipython = "*"
 cryptography = "<2.2"
 gunicorn = "*"
 redis = "*"
+hiredis = "*"
 
 
 [dev-packages]
